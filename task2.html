@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            margin:0;padding:0; height:100vh;
+        }
+        #container{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            align-items: center;
+            width:100%;
+            position: relative;
+            top:35px;
+        }
+        #registeration-half, #login-half{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #form-container, #form1, #form2{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        /* #form1{
+            width:150%;
+        }
+        #form2{
+            width:120%;
+        } */
+        form{
+            border: 1px solid darkgrey;
+            background-color: rgb(216, 216, 216);
+            box-sizing: border-box; 
+            padding:15px; margin:10px;
+            border-radius: 30px;
+            box-shadow: 1px -1px 40px -17px rgba(0,0,0,1);
+            -webkit-box-shadow: 1px -1px 40px -17px rgba(0,0,0,1);
+            -moz-box-shadow: 1px -1px 40px -17px rgba(0,0,0,1);
+        }
+        .input_header{
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            width:100%;
+            text-align: left;
+            margin-left:20px;
+        }
+        input{
+            width: 95%;
+            box-sizing: border-box;
+            margin:7px;
+            background-color: rgb(252, 252, 252);
+            border: lightgrey;
+            padding:.5rem;
+            border-radius: 10px;
+        }
+        .button{
+            width:auto;
+            color: black;
+            padding:.5rem 1.2rem;
+            border-radius: 30px;
+            background-color: rgb(233, 233, 233);
+            margin-top:15px;
+            font-size: 1rem;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+        .error_message{
+            margin-left:10px;
+            font-size: .85rem;
+            color:red;
+        }
+        span{
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="registeration-half">
+            <div id ="form-container">
+                <form id="form1">
+                    <div class="input_header">First Name:<span class="error_message" id="fnspan"></span></div>
+                    <input type="text" id="First_name">
+                    <div class="input_header">Last Name: <span class="error_message" id="lnspan"></span> </div>
+                    <input type="text" id="Last_name">
+                    <div class="input_header">Birthday: <span class="error_message" id="bdspan"></span></div> 
+                    <input type="date" id="Birthday">
+                    <div class="input_header">Email: <span class="error_message" id="emspan"></span></div>
+                    <input type="text" id="Email">
+                    <div class="input_header">Confirm Email: <span class="error_message" id="em2span"></span></div> 
+                    <input type="text" id="Confirm_Email">
+                    <div class="input_header">Mobile Number: <span class="error_message" id="mospan"></span></div> 
+                    <input type="text" id="Mobile">
+                    <div class="input_header">Password: <span class="error_message" id="p1span"></span></div> 
+                    <input type="password" id="Password">
+                    <div class="input_header">Confirm Password: <span class="error_message" id="p2span"></span></div> 
+                    <input type="password" id="Confirm_Password">
+                    <input type="submit" value="Create Account" id="button" class="button">
+                </form>
+            </div>
+        </div>
+        <div id="login-half">
+            <div id ="form-container">
+                <form id="form2">
+                    <div class="input_header">Email: </div>
+                    <input type="text" id="Email2">
+                    <div class="input_header">Password: </div>
+                    <input type="password" id="Password2">
+                    <input type="submit" value="Login" id="button2" class="button">
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById("button").addEventListener("click",validate);
+        document.getElementById("button").addEventListener("click", function(event) {
+            event.preventDefault(); 
+            validate(); 
+        });
+
+        function create(){
+            let obj = {};
+            obj["First_name"]=document.getElementById("First_name").value;
+            obj["Last_name"]=document.getElementById("Last_name").value;
+            obj["Birthday"]=document.getElementById("Birthday").value;
+            obj["Email"]= email = document.getElementById("Email").value;
+            obj["Mobile"]= document.getElementById("Mobile").value;
+            obj["Password"]= document.getElementById("Password").value;
+            localStorage.setItem(email,JSON.stringify(obj));
+        }
+        function validate(){
+            
+            let alert =""; let errors = false;
+            text = document.getElementById("First_name").value;
+            let pattern = /[^A-Za-z]/;
+            let result = pattern.test(text);
+            if(result){
+                document.getElementById("fnspan").innerText = "No numbers or special characters allowed";  
+                errors = true; 
+            } 
+            text = document.getElementById("Last_name").value;
+            result = pattern.test(text);
+            if(result){
+                document.getElementById("lnspan").innerText = "No numbers or special characters allowed";
+                errors = true;   
+            } 
+            text = document.getElementById("Email").value;
+            if(text!=""){
+                pattern = /[\w]+(\@)[\w]+(\.)[\w]+/;
+                result = pattern.test(text);
+                if(!result){
+                    document.getElementById("emspan").innerText = "Invalid email";
+                    errors = true;
+                }
+            }
+            text2 = document.getElementById("Confirm_Email").value;
+            if(text!=text2){
+                document.getElementById("em2span").innerText = "Emails don't match";
+                errors = true;
+            }
+            // mobile number
+            text = document.getElementById("Mobile").value;
+            if(text!=""){
+                if(text.length!=10){
+                    document.getElementById("mospan").innerText = "Invalid phone number";
+                    errors = true;
+                }
+            }
+            text = document.getElementById("Password").value;
+            alert = "";
+            pattern = /\b[A-Z]/;
+            result = pattern.test(text);
+            if(!result){
+                alert="First character must be a capital letter";
+                errors = true;
+            }
+            result = text.match(/\d/g);
+            console.log(result);
+            console.log(result.length);
+            if(result.length<2){
+                if(alert!="") {alert+="\n";}
+                alert+="Password must have at least 2 numbers";
+                errors = true;
+            }
+            pattern = /[-’/`~!#*$@_%+=.,^&(){}[\]|;:”<>?\\]/;
+            result = pattern.test(text);
+            if(!result){
+                if(alert!="") {alert+="\n";}
+                alert+="Password must have at least 1 special character";
+                errors = true;
+            }
+            if(text.length<8 || text.length >32){
+                if(alert!="") {alert+="\n";}
+                alert+="Password length must be between 8 and 32 inclusive";
+                errors = true;
+            }
+            if(alert!=""){
+                document.getElementById("p1span").innerText = alert;
+                errors = true;
+            }
+            text2 = document.getElementById("Confirm_Password").value;
+            if(text!=text2){
+                document.getElementById("p2span").innerText = "Passwords don't match";
+                errors = true;
+            }
+            text = document.getElementById("Birthday").value;
+            if(text==""){
+                document.getElementById("bdspan").innerText = "Invalid birthday";
+                errors = true;
+            }
+            if(errors==false){
+                create();
+            }
+        }
+
+
+        document.getElementById("button2").addEventListener("click",sigin);
+        function sigin(){
+            email = document.getElementById("Email2").value;
+            Password = document.getElementById("Password2").value;
+            obj = JSON.parse(localStorage.getItem(email));
+            if(Password === obj["Password"]){
+            window.alert("Welcome back "+obj["First_name"]);}
+            else{
+                window.alert("Wrong Username or Password");
+            }
+        }
+    </script>
+</body>
+</html>
